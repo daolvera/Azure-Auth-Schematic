@@ -10,10 +10,10 @@ This repository is a Schematic implementation that serves as a starting point fo
 
 ## Usage
 
-1. Run the schematic in your Angular project:
+1. Run the schematic in your Angular project (View [the package here](https://www.npmjs.com/package/azure-msal-auth-schematic)):
 
     ```bash
-    schematics ./path-to/azure-auth-schematic:azure-auth-schematic
+    ng add azure-msal-auth-schematic
     ```
 
 2. The schematic will:
@@ -24,7 +24,7 @@ This repository is a Schematic implementation that serves as a starting point fo
     - `src/app/services/authentication.service.ts`
     - `src/app/environments/environment.ts`
     - `src/app/app.config.authentication.ts`
-    - `src/app/app.routes.ts`, `src/app/app.ts`, `src/app/app.html`, and a simple `home` component
+    - `src/app/app.routes.ts`, `src/app/app.ts`, `src/app/app.html`, and a simple `sample` component
 
 3. Update `environment.ts` with your Azure AD values:
 
