@@ -5,6 +5,7 @@ This repository is a Schematic implementation that serves as a starting point fo
 ## Requirements
 
 - Angular 16 or newer (for signal support in the authentication service)
+- No Server-Side Rendering or Static Site Generation (for now)
 - An Azure AD application registration (see below)
 
 ## Usage
