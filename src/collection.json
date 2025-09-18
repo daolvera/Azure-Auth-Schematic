@@ -2,8 +2,13 @@
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
     "azure-auth-schematic": {
-      "description": "A blank schematic.",
+      "description": "Scaffolds a secure Angular application with Azure authentication using MSAL.js.",
       "factory": "./azure-auth-schematic/index#azureAuthSchematic"
+    },
+    "ng-add": {
+      "description": "Add Azure MSAL Auth schematic to your project via ng add.",
+      "factory": "./azure-auth-schematic/index#azureAuthSchematic",
+      "aliases": ["AzureMsalAuth"]
     }
   }
 }
