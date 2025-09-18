@@ -1,10 +1,14 @@
 {
   "name": "azure-auth-schematic",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "Scaffolds a secure Angular application with Azure authentication using MSAL.js.",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && jasmine src/**/*_spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daolvera/Azure-Auth-Schematic"
   },
   "keywords": [
     "schematics",
