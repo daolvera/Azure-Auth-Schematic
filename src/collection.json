@@ -1,0 +1,9 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "azure-auth-schematic": {
+      "description": "A blank schematic.",
+      "factory": "./azure-auth-schematic/index#azureAuthSchematic"
+    }
+  }
+}
