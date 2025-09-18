@@ -1,6 +1,6 @@
 {
   "name": "azure-auth-schematic",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Scaffolds a secure Angular application with Azure authentication using MSAL.js.",
   "scripts": {
     "build": "tsc -p tsconfig.json",
