@@ -1,15 +1,15 @@
+import { strings } from "@angular-devkit/core";
 import {
   Rule,
   SchematicContext,
   Tree,
+  apply,
   chain,
   mergeWith,
-  apply,
-  url,
   move,
   template,
+  url,
 } from "@angular-devkit/schematics";
-import { strings } from "@angular-devkit/core";
 import { NodePackageInstallTask } from "@angular-devkit/schematics/tasks";
 
 interface SchemaOptions {
@@ -52,12 +52,14 @@ export function azureAuthSchematic(_options: SchemaOptions): Rule {
         if (pkgBuffer) {
           const pkg = JSON.parse(pkgBuffer.toString("utf-8"));
           const angularCore =
-            pkg.dependencies && pkg.dependencies["@angular/core"];
+            pkg.dependencies?.["@angular/core"] ??
+            pkg.devDependencies?.["@angular/core"] ??
+            pkg.peerDependencies?.["@angular/core"];
           if (angularCore) {
             const versionMatch = angularCore.match(/\d+/);
             if (versionMatch && parseInt(versionMatch[0], 10) < 18) {
               context.logger.error(
-                "This schematic requires Angular 18 or newer. MSAL v5 dropped support for Angular 17 and below. Please upgrade your project."
+                "This schematic requires Angular 18 or newer. MSAL v5 dropped support for Angular 17 and below. Please upgrade your project.",
               );
               throw new Error("Angular version 18+ required.");
             }
@@ -90,7 +92,7 @@ export function azureAuthSchematic(_options: SchemaOptions): Rule {
           ...options,
         }),
         move("src/app"),
-      ])
+      ]),
     ),
   ]);
 }

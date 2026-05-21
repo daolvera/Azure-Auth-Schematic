@@ -1,14 +1,14 @@
 import {
-  IPublicClientApplication,
-  PublicClientApplication,
-  InteractionType,
-  BrowserCacheLocation,
-} from "@azure/msal-browser";
-import {
-  MsalInterceptorConfiguration,
   MsalGuardConfiguration,
+  MsalInterceptorConfiguration,
   ProtectedResourceScopes,
 } from "@azure/msal-angular";
+import {
+  BrowserCacheLocation,
+  InteractionType,
+  IPublicClientApplication,
+  PublicClientApplication,
+} from "@azure/msal-browser";
 import { environment } from "./environments/environment";
 
 export function MSALInstanceFactory(): IPublicClientApplication {
@@ -34,14 +34,11 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
     string,
     Array<string | ProtectedResourceScopes> | null
   >();
-  protectedResourceMap.set(
-    environment.apiConfig.uri,
-    environment.apiConfig.scopes
-  );
-  protectedResourceMap.set(
-    protectedResources.endpoint,
-    protectedResources.scopes.write
-  );
+  const interceptorScopes = [
+    ...environment.apiConfig.scopes,
+    ...protectedResources.scopes.write,
+  ];
+  protectedResourceMap.set(environment.apiConfig.uri, interceptorScopes);
 
   return {
     interactionType: InteractionType.Redirect,
