@@ -9,7 +9,7 @@ describe("azure-auth-schematic", () => {
     const runner = new SchematicTestRunner("schematics", collectionPath);
     const tree = await runner.runSchematic(
       "azure-auth-schematic",
-      {},
+      { clientId: "test-client-id", tenantId: "test-tenant-id" },
       Tree.empty()
     );
 
@@ -39,7 +39,7 @@ describe("azure-auth-schematic", () => {
 
     const tree = await runner.runSchematic(
       "azure-auth-schematic",
-      {},
+      { clientId: "test-client-id", tenantId: "test-tenant-id" },
       baseTree
     );
 
@@ -59,7 +59,7 @@ describe("azure-auth-schematic", () => {
     );
 
     await expectAsync(
-      runner.runSchematic("azure-auth-schematic", {}, baseTree)
+      runner.runSchematic("azure-auth-schematic", { clientId: "test-client-id", tenantId: "test-tenant-id" }, baseTree)
     ).toBeRejectedWithError("Angular version 18+ required.");
   });
 
