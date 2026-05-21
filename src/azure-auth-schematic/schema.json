@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "AzureAuthSchematic",
+  "title": "Azure MSAL Auth Schematic",
+  "type": "object",
+  "description": "Scaffolds a secure Angular application with Azure AD authentication using MSAL.js.",
+  "additionalProperties": false,
+  "properties": {
+    "clientId": {
+      "type": "string",
+      "description": "Azure AD Application (client) ID.",
+      "default": "<YOUR_CLIENT_ID>",
+      "x-prompt": "What is your Azure AD Application (client) ID?"
+    },
+    "tenantId": {
+      "type": "string",
+      "description": "Azure AD Directory (tenant) ID.",
+      "default": "<YOUR_TENANT_ID>",
+      "x-prompt": "What is your Azure AD Directory (tenant) ID?"
+    },
+    "redirectUri": {
+      "type": "string",
+      "description": "Redirect URI registered in your Azure AD app (e.g. http://localhost:4200/).",
+      "default": "/"
+    },
+    "apiUrl": {
+      "type": "string",
+      "description": "URL of the protected API (e.g. https://graph.microsoft.com/v1.0/me).",
+      "default": "https://graph.microsoft.com/v1.0/me",
+      "x-prompt": "What is the URL of the protected API?"
+    },
+    "apiScope": {
+      "type": "string",
+      "description": "API scope to request (e.g. api://<clientId>/access_as_user).",
+      "default": "user.read",
+      "x-prompt": "What API scope should be requested (e.g. user.read or api://<clientId>/access_as_user)?"
+    }
+  },
+  "required": []
+}

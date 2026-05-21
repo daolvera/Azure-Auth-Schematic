@@ -1,4 +1,5 @@
-import { Inject, Injectable, signal } from "@angular/core";
+import { Injectable, inject, signal } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
   MsalGuardConfiguration,
   MsalService,
@@ -17,8 +18,8 @@ import { filter } from "rxjs";
 import { environment } from "../environments/environment";
 
 /**
- * AuthenticationService uses Angular signals for state management.
- * Requires Angular 16 or newer.
+ * AuthenticationService uses Angular signals for reactive account state.
+ * Requires Angular 18 or newer (MSAL v5 drops Angular 17 and below).
  */
 @Injectable({
   providedIn: "root",
@@ -26,15 +27,15 @@ import { environment } from "../environments/environment";
 export class AuthenticationService {
   public activeAccount = signal<AccountInfo | null>(null);
 
-  constructor(
-    @Inject(MSAL_GUARD_CONFIG)
-    private msalGuardConfig: MsalGuardConfiguration,
-    private msalAuthService: MsalService,
-    private msalBroadcastService: MsalBroadcastService
-  ) {
+  private readonly msalGuardConfig = inject<MsalGuardConfiguration>(MSAL_GUARD_CONFIG);
+  private readonly msalAuthService = inject(MsalService);
+  private readonly msalBroadcastService = inject(MsalBroadcastService);
+
+  constructor() {
     this.msalBroadcastService.msalSubject$
       .pipe(
-        filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS)
+        filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS),
+        takeUntilDestroyed()
       )
       .subscribe((result: EventMessage) => {
         const payload = result.payload as AuthenticationResult;
@@ -44,50 +45,41 @@ export class AuthenticationService {
 
     this.msalBroadcastService.inProgress$
       .pipe(
-        filter((status: InteractionStatus) => status === InteractionStatus.None)
+        filter((status: InteractionStatus) => status === InteractionStatus.None),
+        takeUntilDestroyed()
       )
       .subscribe(() => {
         this.checkAndSetActiveAccount();
       });
   }
 
-  public checkAndSetActiveAccount() {
+  public checkAndSetActiveAccount(): void {
     /**
-     * If no active account set but there are accounts signed in, sets first account to active account
-     * To use active account set here, subscribe to inProgress$ first in your component
-     * Note: Basic usage demonstrated. Your app may require more complicated account selection logic
+     * If no active account is set but there are accounts signed in, sets the
+     * first account as active. Your app may require more sophisticated selection logic.
      */
-    let activeAccount = this.msalAuthService.instance.getActiveAccount();
+    const activeAccount = this.msalAuthService.instance.getActiveAccount();
 
-    if (
-      !activeAccount &&
-      this.msalAuthService.instance.getAllAccounts().length > 0
-    ) {
-      let accounts = this.msalAuthService.instance.getAllAccounts();
+    if (!activeAccount && this.msalAuthService.instance.getAllAccounts().length > 0) {
+      const accounts = this.msalAuthService.instance.getAllAccounts();
       this.msalAuthService.instance.setActiveAccount(accounts[0]);
     }
     this.activeAccount.set(this.msalAuthService.instance.getActiveAccount());
   }
 
-  public login() {
+  public login(): void {
     if (this.msalGuardConfig.interactionType === InteractionType.Popup) {
       this.msalAuthService
-        .loginPopup({
-          scopes: [],
-          prompt: "create",
-        })
+        .loginPopup({ scopes: [], prompt: "create" })
         .subscribe((response: AuthenticationResult) => {
           this.msalAuthService.instance.setActiveAccount(response.account);
         });
     } else {
-      this.msalAuthService.loginRedirect({
-        scopes: [],
-        prompt: "create",
-      });
+      this.msalAuthService.loginRedirect({ scopes: [], prompt: "create" });
     }
   }
 
-  logout(popup?: boolean) {
+  public logout(popup?: boolean): void {
     if (popup) {
       this.msalAuthService.logoutPopup({
         mainWindowRedirectUri: environment.msalConfig.auth.redirectUri,

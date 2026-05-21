@@ -2,7 +2,6 @@ import { Component } from "@angular/core";
 
 @Component({
   selector: "app-sample",
-  standalone: true,
   template: `
     <div
       style="

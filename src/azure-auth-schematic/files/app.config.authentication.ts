@@ -24,6 +24,11 @@ export function MSALInstanceFactory(): IPublicClientApplication {
   });
 }
 
+const protectedResources = {
+  endpoint: environment.apiConfig.uri,
+  scopes: environment.msalConfig.auth.scopes,
+};
+
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<
     string,
@@ -43,11 +48,6 @@ export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
     protectedResourceMap,
   };
 }
-
-const protectedResources = {
-  endpoint: environment.apiUrl,
-  scopes: environment.msalConfig.auth.scopes,
-};
 
 export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {

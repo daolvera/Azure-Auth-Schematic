@@ -12,7 +12,23 @@ import {
 import { strings } from "@angular-devkit/core";
 import { NodePackageInstallTask } from "@angular-devkit/schematics/tasks";
 
-export function azureAuthSchematic(_options: any): Rule {
+interface SchemaOptions {
+  clientId?: string;
+  tenantId?: string;
+  redirectUri?: string;
+  apiUrl?: string;
+  apiScope?: string;
+}
+
+export function azureAuthSchematic(_options: SchemaOptions): Rule {
+  const options: Required<SchemaOptions> = {
+    clientId: _options.clientId ?? "<YOUR_CLIENT_ID>",
+    tenantId: _options.tenantId ?? "<YOUR_TENANT_ID>",
+    redirectUri: _options.redirectUri ?? "/",
+    apiUrl: _options.apiUrl ?? "https://graph.microsoft.com/v1.0/me",
+    apiScope: _options.apiScope ?? "user.read",
+  };
+
   return chain([
     (tree: Tree, context: SchematicContext) => {
       const filesToOverwrite = [
@@ -39,11 +55,11 @@ export function azureAuthSchematic(_options: any): Rule {
             pkg.dependencies && pkg.dependencies["@angular/core"];
           if (angularCore) {
             const versionMatch = angularCore.match(/\d+/);
-            if (versionMatch && parseInt(versionMatch[0], 10) < 16) {
+            if (versionMatch && parseInt(versionMatch[0], 10) < 18) {
               context.logger.error(
-                "This schematic requires Angular 16 or newer for signal support. Please upgrade your project."
+                "This schematic requires Angular 18 or newer. MSAL v5 dropped support for Angular 17 and below. Please upgrade your project."
               );
-              throw new Error("Angular version 16+ required.");
+              throw new Error("Angular version 18+ required.");
             }
           }
         }
@@ -58,8 +74,8 @@ export function azureAuthSchematic(_options: any): Rule {
         if (pkgBuffer) {
           const pkg = JSON.parse(pkgBuffer.toString("utf-8"));
           pkg.dependencies = pkg.dependencies || {};
-          pkg.dependencies["@azure/msal-browser"] = "^3.0.0";
-          pkg.dependencies["@azure/msal-angular"] = "^3.0.0";
+          pkg.dependencies["@azure/msal-browser"] = "^5.11.0";
+          pkg.dependencies["@azure/msal-angular"] = "^5.2.5";
           tree.overwrite(pkgPath, JSON.stringify(pkg, null, 2));
           context.addTask(new NodePackageInstallTask());
         }
@@ -71,7 +87,7 @@ export function azureAuthSchematic(_options: any): Rule {
       apply(url("./files"), [
         template({
           ...strings,
-          ..._options,
+          ...options,
         }),
         move("src/app"),
       ])
