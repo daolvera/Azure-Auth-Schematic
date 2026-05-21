@@ -3,11 +3,13 @@
   "schematics": {
     "azure-auth-schematic": {
       "description": "Scaffolds a secure Angular application with Azure authentication using MSAL.js.",
-      "factory": "./azure-auth-schematic/index#azureAuthSchematic"
+      "factory": "./azure-auth-schematic/index#azureAuthSchematic",
+      "schema": "./azure-auth-schematic/schema.json"
     },
     "ng-add": {
       "description": "Add Azure MSAL Auth schematic to your project via ng add.",
       "factory": "./azure-auth-schematic/index#azureAuthSchematic",
+      "schema": "./azure-auth-schematic/schema.json",
       "aliases": ["AzureMsalAuth"]
     }
   }
