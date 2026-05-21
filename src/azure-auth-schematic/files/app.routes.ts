@@ -4,6 +4,7 @@ import { SampleComponent } from "./sample/sample";
 import { LoginFailedComponent } from "./login-failed/login-failed";
 
 export const routes: Routes = [
-  { path: "", component: SampleComponent, canActivate: [MsalGuard] },
+  { path: "sample", component: SampleComponent, canActivate: [MsalGuard] },
   { path: "login-failed", component: LoginFailedComponent },
+  { path: "**", redirectTo: "" },
 ];

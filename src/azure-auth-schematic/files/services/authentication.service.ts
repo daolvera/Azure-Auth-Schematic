@@ -32,6 +32,20 @@ export class AuthenticationService {
   private readonly msalBroadcastService = inject(MsalBroadcastService);
 
   constructor() {
+    // Must subscribe to handleRedirectObservable to process redirect auth responses.
+    // Without this, LOGIN_SUCCESS never fires and inProgress$ never reaches None.
+    this.msalAuthService.handleRedirectObservable()
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: (result: AuthenticationResult | null) => {
+          if (result) {
+            this.msalAuthService.instance.setActiveAccount(result.account);
+            this.activeAccount.set(result.account);
+          }
+        },
+        error: (error) => console.error(error),
+      });
+
     this.msalBroadcastService.msalSubject$
       .pipe(
         filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS),

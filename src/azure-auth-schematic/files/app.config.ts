@@ -1,7 +1,8 @@
 import {
+  APP_INITIALIZER,
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
-  provideZoneChangeDetection,
+  provideZonelessChangeDetection,
 } from "@angular/core";
 import { provideRouter } from "@angular/router";
 
@@ -21,16 +22,21 @@ import {
   MsalGuard,
   MsalBroadcastService,
 } from "@azure/msal-angular";
+import { IPublicClientApplication } from "@azure/msal-browser";
 import {
   MSALGuardConfigFactory,
   MSALInstanceFactory,
   MSALInterceptorConfigFactory,
 } from "./app.config.authentication";
 
+function initializeMsal(msalInstance: IPublicClientApplication) {
+  return () => msalInstance.initialize();
+}
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi(), withFetch()),
     {
@@ -49,6 +55,12 @@ export const appConfig: ApplicationConfig = {
     {
       provide: MSAL_INTERCEPTOR_CONFIG,
       useFactory: MSALInterceptorConfigFactory,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeMsal,
+      deps: [MSAL_INSTANCE],
+      multi: true,
     },
     MsalService,
     MsalGuard,
