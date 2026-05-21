@@ -24,21 +24,12 @@ export function MSALInstanceFactory(): IPublicClientApplication {
   });
 }
 
-const protectedResources = {
-  endpoint: environment.apiConfig.uri,
-  scopes: environment.msalConfig.auth.scopes,
-};
-
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<
     string,
     Array<string | ProtectedResourceScopes> | null
   >();
-  const interceptorScopes = [
-    ...environment.apiConfig.scopes,
-    ...protectedResources.scopes.write,
-  ];
-  protectedResourceMap.set(environment.apiConfig.uri, interceptorScopes);
+  protectedResourceMap.set(environment.apiConfig.uri, environment.apiConfig.scopes);
 
   return {
     interactionType: InteractionType.Redirect,

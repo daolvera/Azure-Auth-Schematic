@@ -241,11 +241,18 @@
           authService.activeAccount()?.username }}
         </strong>
       </p>
+      <a routerLink="/sample" class="sample-link">View Protected Content</a>
+      } @else {
+      <button class="signin-btn" (click)="authService.login()">
+        Sign In with Azure
+      </button>
+      }
+      <router-outlet />
+      @if (authService.activeAccount() != null){
       <button class="signout-btn" (click)="authService.logout()">
         Sign Out
       </button>
-      } @else{ Redirecting you to sign in... }
-      <router-outlet />
+      }
     </div>
     <div class="divider" role="separator" aria-label="Divider"></div>
     <div class="right-side">
@@ -302,6 +309,31 @@
           background: var(--emerald-dark);
           box-shadow: 0 4px 16px 0 rgb(0 0 0 / 0.22);
           opacity: 0.98;
+        }
+        .signin-btn {
+          background: var(--gradient-accent);
+          color: #fff;
+          border: none;
+          border-radius: 2rem;
+          padding: 0.5rem 1.5rem;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          margin-top: 1.5rem;
+          box-shadow: 0 2px 8px 0 rgb(0 0 0 / 0.18);
+          transition: background 0.2s, box-shadow 0.2s;
+        }
+        .signin-btn:hover {
+          background: var(--emerald-dark);
+          box-shadow: 0 4px 16px 0 rgb(0 0 0 / 0.22);
+          opacity: 0.98;
+        }
+        .sample-link {
+          display: inline-block;
+          color: var(--emerald);
+          font-weight: 600;
+          text-decoration: underline;
+          margin-top: 1rem;
         }
       </style>
     </div>

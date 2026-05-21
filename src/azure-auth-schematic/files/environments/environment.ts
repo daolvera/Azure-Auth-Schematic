@@ -5,9 +5,6 @@ export const environment = {
     auth: {
       clientId: "<%= clientId %>",
       authority: "https://login.microsoftonline.com/<%= tenantId %>",
-      scopes: {
-        write: ["api://<%= clientId %>/<%= apiScope %>"],
-      },
       redirectUri: "<%= redirectUri %>",
     },
   },
