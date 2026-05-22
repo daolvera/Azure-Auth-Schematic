@@ -3,8 +3,11 @@
   "version": "2.0.0",
   "description": "Scaffolds a secure Angular application with Azure authentication using MSAL.js.",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "test": "npm run build && jasmine src/**/*_spec.js"
+    "build": "node scripts/build.js",
+    "build:watch": "tsc -p tsconfig.json --watch",
+    "clean": "node scripts/clean.js",
+    "test": "npm run build && tsc -p tsconfig.spec.json && jasmine --config=jasmine.json",
+    "prepublishOnly": "npm run clean && npm run build && npm test"
   },
   "repository": {
     "type": "git",
